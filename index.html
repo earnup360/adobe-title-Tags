@@ -3,537 +3,950 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Round Corner Image Editor</title>
+    <title>Dual-Box Keyword Generator | Adobe Stock</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #4361ee;
-            --secondary-color: #3f37c9;
-            --text-color: #333;
-            --bg-color: #f8f9fa;
-            --card-bg: #fff;
-            --border-color: #e0e0e0;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --radius: 12px;
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4895ef;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --danger: #ef233c;
+            --border-radius: 10px;
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
         }
-
-        [data-theme="dark"] {
-            --primary-color: #4895ef;
-            --secondary-color: #4361ee;
-            --text-color: #f8f9fa;
-            --bg-color: #121212;
-            --card-bg: #1e1e1e;
-            --border-color: #333;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-        }
-
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            transition: background-color 0.3s, color 0.3s;
         }
-
+        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            font-family: 'Poppins', sans-serif;
             line-height: 1.6;
-            padding: 20px;
+            color: var(--dark);
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
+            padding: 30px 20px;
         }
-
+        
         .container {
-            max-width: 1000px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 20px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
         }
-
+        
         header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-
-        h1 {
-            font-size: 2rem;
-            color: var(--primary-color);
-            margin-bottom: 10px;
-        }
-
-        .description {
-            color: var(--text-color);
-            opacity: 0.8;
-            margin-bottom: 20px;
-        }
-
-        .theme-toggle {
-            background: var(--primary-color);
+            background: linear-gradient(to right, var(--primary), var(--secondary));
             color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 500;
-        }
-
-        .theme-toggle:hover {
-            background: var(--secondary-color);
-        }
-
-        .app-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-        }
-
-        @media (max-width: 768px) {
-            .app-container {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .upload-section, .preview-section {
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            padding: 25px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border-color);
-        }
-
-        .upload-area {
-            border: 2px dashed var(--border-color);
-            border-radius: var(--radius);
             padding: 30px;
             text-align: center;
-            cursor: pointer;
-            margin-bottom: 20px;
             position: relative;
-            height: 200px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .upload-area:hover {
-            border-color: var(--primary-color);
-        }
-
-        .upload-area.active {
-            border-color: var(--primary-color);
-            background-color: rgba(67, 97, 238, 0.05);
-        }
-
-        .upload-icon {
-            font-size: 48px;
-            color: var(--primary-color);
-            margin-bottom: 15px;
-        }
-
-        .upload-text {
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-        }
-
-        .upload-hint {
-            font-size: 0.9rem;
-            color: var(--text-color);
-            opacity: 0.7;
-        }
-
-        #fileInput {
-            display: none;
-        }
-
-        .controls {
-            margin-top: 20px;
-        }
-
-        .control-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
-        .slider-container {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .slider {
-            flex: 1;
-            height: 8px;
-            -webkit-appearance: none;
-            appearance: none;
-            background: #ddd;
-            border-radius: 4px;
-            outline: none;
-        }
-
-        .slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: var(--primary-color);
-            cursor: pointer;
-        }
-
-        .slider::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: var(--primary-color);
-            cursor: pointer;
-        }
-
-        .value-display {
-            width: 50px;
-            text-align: center;
-            font-weight: bold;
-        }
-
-        .btn {
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: var(--radius);
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 500;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s;
-        }
-
-        .btn:hover {
-            background: var(--secondary-color);
-            transform: translateY(-2px);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .btn-secondary {
-            background: #6c757d;
-        }
-
-        .btn-secondary:hover {
-            background: #5a6268;
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .preview-container {
-            width: 100%;
-            height: 300px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: var(--bg-color);
-            border-radius: var(--radius);
             overflow: hidden;
-            margin-bottom: 20px;
-            position: relative;
-            border: 1px solid var(--border-color);
         }
-
-        #previewImage {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            border-radius: 0;
-            transition: border-radius 0.2s;
-        }
-
-        .image-info {
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-            display: none;
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 40px;
-            color: var(--text-color);
-            opacity: 0.7;
-            font-size: 0.9rem;
-        }
-
-        .drag-overlay {
+        
+        header::after {
+            content: '';
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(67, 97, 238, 0.1);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: bold;
-            color: var(--primary-color);
-            font-size: 1.2rem;
-            border-radius: var(--radius);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path fill="rgba(255,255,255,0.05)" d="M0,0 L100,0 L100,100 L0,100 Z"></path></svg>');
+            opacity: 0.3;
         }
-
-        .drag-overlay.active {
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .input-section {
+            padding: 30px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            background: white;
+        }
+        
+        .input-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        label i {
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+        
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+            transition: var(--transition);
+        }
+        
+        input[type="text"]:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(50%);
+            color: #999;
+            font-size: 1.2rem;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+            gap: 10px;
+        }
+        
+        .btn:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
+        }
+        
+        .btn i {
+            font-size: 1.1rem;
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            box-shadow: none;
+        }
+        
+        .btn-secondary:hover {
+            background: var(--light);
+        }
+        
+        .btn-success {
+            background: var(--success);
+        }
+        
+        .btn-success:hover {
+            background: #3ab7d8;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            display: none;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid var(--primary);
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .results-section {
+            padding: 30px;
+            display: none;
+        }
+        
+        .stats {
+            background: var(--light);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .stats-info {
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .stats-info strong {
+            color: var(--primary);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .keyword-boxes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        @media (max-width: 992px) {
+            .keyword-boxes {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .keyword-box {
+            background: white;
+            border: 1px solid #eee;
+            border-radius: var(--border-radius);
+            padding: 0;
+            transition: var(--transition);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .keyword-box-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--light);
+        }
+        
+        .keyword-box-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .keyword-box-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .keyword-list {
+            padding: 20px;
+            flex: 1;
+            overflow-y: auto;
+            max-height: 500px;
+        }
+        
+        .keyword-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-radius: 6px;
+            transition: var(--transition);
+            margin-bottom: 8px;
+            background: rgba(0, 0, 0, 0.01);
+        }
+        
+        .keyword-item:hover {
+            background: rgba(67, 97, 238, 0.05);
+            transform: translateX(5px);
+        }
+        
+        .keyword-checkbox {
+            margin-right: 15px;
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary);
+        }
+        
+        .keyword-text {
+            flex: 1;
+            font-size: 0.95rem;
+            word-break: break-word;
+        }
+        
+        .copy-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 15px 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 1000;
+        }
+        
+        .copy-notification.show {
+            transform: translateY(0);
             opacity: 1;
+        }
+        
+        .copy-notification i {
+            font-size: 1.2rem;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #ddd;
+        }
+        
+        .feature-highlights {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+        
+        .feature-icon {
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        
+        .feature-content h3 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+        
+        .feature-content p {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .action-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .keyword-box-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .keyword-box-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <div>
-                <h1>Round Corner Image Editor</h1>
-                <p class="description">আপনার ইমেজের কর্নারগুলোকে সুন্দর গোলাকার করে নিন</p>
-            </div>
-            <button class="theme-toggle" id="themeToggle">
-                <span id="themeIcon">🌙</span>
-                <span id="themeText">ডার্ক মোড</span>
-            </button>
+            <h1><i class="fas fa-keyboard"></i> Dual-Box Keyword Generator</h1>
+            <p class="subtitle">Generate 1000+ Google-searchable keywords for Adobe Stock contributions</p>
         </header>
-
-        <div class="app-container">
-            <div class="upload-section">
-                <div class="upload-area" id="uploadArea">
-                    <div class="upload-icon">📁</div>
-                    <div class="upload-text">ইমেজ আপলোড করুন</div>
-                    <div class="upload-hint">ক্লিক করুন অথবা ইমেজ ড্রাগ এন্ড ড্রপ করুন</div>
-                    <div class="drag-overlay" id="dragOverlay">ইমেজ ড্রপ করুন</div>
-                    <input type="file" id="fileInput" accept="image/*">
+        
+        <div class="input-section">
+            <div class="input-group">
+                <label for="title"><i class="fas fa-heading"></i> Image/Video Title</label>
+                <div class="input-icon">
+                    <i class="fas fa-pen"></i>
                 </div>
-
-                <div class="controls">
-                    <div class="control-group">
-                        <label for="cornerRadius">কর্নার রাউন্ডনেস</label>
-                        <div class="slider-container">
-                            <input type="range" min="0" max="150" value="0" class="slider" id="cornerRadius">
-                            <span class="value-display" id="radiusValue">0px</span>
-                        </div>
-                    </div>
-
-                    <div class="btn-group">
-                        <button class="btn" id="downloadBtn">
-                            <span>ডাউনলোড (PNG)</span>
-                        </button>
-                        <button class="btn btn-secondary" id="resetBtn">
-                            <span>রিসেট</span>
-                        </button>
-                    </div>
-                </div>
+                <input type="text" id="title" placeholder="e.g., 'Beautiful sunset over mountain landscape'">
             </div>
-
-            <div class="preview-section">
-                <h2>প্রিভিউ</h2>
-                <div class="preview-container">
-                    <img id="previewImage" src="" alt="Preview Image">
-                    <div class="image-info" id="imageInfo"></div>
+            
+            <div class="input-group">
+                <label for="content"><i class="fas fa-align-left"></i> Description (Optional)</label>
+                <div class="input-icon">
+                    <i class="fas fa-info-circle"></i>
                 </div>
-                <p>আপনার ইমেজের প্রিভিউ এখানে দেখানো হবে। কর্নার রাউন্ডনেস স্লাইড করে পরিবর্তন করতে পারবেন।</p>
+                <textarea id="content" placeholder="Describe your image/video in detail to generate more relevant keywords..."></textarea>
+            </div>
+            
+            <button id="generate-btn" class="btn">
+                <i class="fas fa-magic"></i> Generate Keywords
+            </button>
+            
+            <div class="feature-highlights">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-check-double"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Dual-Box Design</h3>
+                        <p>Two separate keyword boxes with 500 keywords each for better organization</p>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-copy"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Easy Selection</h3>
+                        <p>Select individual keywords or entire boxes with one click</p>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>SEO Optimized</h3>
+                        <p>Keywords designed to rank well on Google and Adobe Stock</p>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <footer>
-            <p>© 2023 Round Corner Image Editor | তৈরি করেছেন আপনার জন্য</p>
-        </footer>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Generating 1000+ premium keywords for your content...</p>
+        </div>
+        
+        <div class="results-section" id="results">
+            <div class="stats">
+                <div class="stats-info">
+                    <i class="fas fa-key" style="color: var(--primary);"></i>
+                    <div>
+                        Generated <strong id="keyword-count">1000</strong> keywords for: 
+                        <strong id="title-display">Your Title</strong>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button id="copy-selected-btn" class="btn btn-success">
+                        <i class="fas fa-copy"></i> Copy Selected
+                    </button>
+                    <button id="select-all-btn" class="btn btn-secondary">
+                        <i class="fas fa-check-double"></i> Select All
+                    </button>
+                    <button id="clear-all-btn" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Clear All
+                    </button>
+                </div>
+            </div>
+            
+            <div class="keyword-boxes" id="keyword-boxes">
+                <div class="keyword-box" id="keyword-box-1">
+                    <div class="keyword-box-header">
+                        <div class="keyword-box-title">
+                            <i class="fas fa-box-open"></i>
+                            <span>Primary Keywords (1-500)</span>
+                        </div>
+                        <div class="keyword-box-actions">
+                            <button class="btn-secondary box-select-btn" data-box="1">
+                                <i class="fas fa-check"></i> Select All
+                            </button>
+                        </div>
+                    </div>
+                    <div class="keyword-list" id="keyword-list-1">
+                        <div class="empty-state">
+                            <i class="fas fa-keyboard"></i>
+                            <p>Keywords will appear here after generation</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="keyword-box" id="keyword-box-2">
+                    <div class="keyword-box-header">
+                        <div class="keyword-box-title">
+                            <i class="fas fa-box"></i>
+                            <span>Secondary Keywords (501-1000)</span>
+                        </div>
+                        <div class="keyword-box-actions">
+                            <button class="btn-secondary box-select-btn" data-box="2">
+                                <i class="fas fa-check"></i> Select All
+                            </button>
+                        </div>
+                    </div>
+                    <div class="keyword-list" id="keyword-list-2">
+                        <div class="empty-state">
+                            <i class="fas fa-keyboard"></i>
+                            <p>Keywords will appear here after generation</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="copy-notification" id="copy-notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="copy-message">Keywords copied to clipboard!</span>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // DOM Elements
-            const fileInput = document.getElementById('fileInput');
-            const uploadArea = document.getElementById('uploadArea');
-            const previewImage = document.getElementById('previewImage');
-            const cornerRadius = document.getElementById('cornerRadius');
-            const radiusValue = document.getElementById('radiusValue');
-            const downloadBtn = document.getElementById('downloadBtn');
-            const resetBtn = document.getElementById('resetBtn');
-            const imageInfo = document.getElementById('imageInfo');
-            const themeToggle = document.getElementById('themeToggle');
-            const themeIcon = document.getElementById('themeIcon');
-            const themeText = document.getElementById('themeText');
-            const dragOverlay = document.getElementById('dragOverlay');
-
-            // Variables
-            let currentImage = null;
-            let currentImageName = '';
-
-            // Event Listeners
-            uploadArea.addEventListener('click', () => fileInput.click());
-            fileInput.addEventListener('change', handleFileSelect);
-            cornerRadius.addEventListener('input', updateCornerRadius);
-            downloadBtn.addEventListener('click', downloadImage);
-            resetBtn.addEventListener('click', resetAll);
-            themeToggle.addEventListener('click', toggleTheme);
-
-            // Drag and Drop events
-            uploadArea.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                uploadArea.classList.add('active');
-                dragOverlay.classList.add('active');
-            });
-
-            uploadArea.addEventListener('dragleave', () => {
-                uploadArea.classList.remove('active');
-                dragOverlay.classList.remove('active');
-            });
-
-            uploadArea.addEventListener('drop', (e) => {
-                e.preventDefault();
-                uploadArea.classList.remove('active');
-                dragOverlay.classList.remove('active');
+        // DOM Elements
+        const generateBtn = document.getElementById('generate-btn');
+        const titleInput = document.getElementById('title');
+        const contentInput = document.getElementById('content');
+        const loadingSection = document.getElementById('loading');
+        const resultsSection = document.getElementById('results');
+        const keywordCount = document.getElementById('keyword-count');
+        const titleDisplay = document.getElementById('title-display');
+        const copySelectedBtn = document.getElementById('copy-selected-btn');
+        const selectAllBtn = document.getElementById('select-all-btn');
+        const clearAllBtn = document.getElementById('clear-all-btn');
+        const copyNotification = document.getElementById('copy-notification');
+        const copyMessage = document.getElementById('copy-message');
+        const keywordBoxesContainer = document.getElementById('keyword-boxes');
+        
+        // Event Listeners
+        generateBtn.addEventListener('click', generateKeywords);
+        copySelectedBtn.addEventListener('click', copySelectedKeywords);
+        selectAllBtn.addEventListener('click', () => toggleSelectAll(true));
+        clearAllBtn.addEventListener('click', () => toggleSelectAll(false));
+        
+        // Box select buttons
+        document.querySelectorAll('.box-select-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const boxNum = this.dataset.box;
+                const checkboxes = document.querySelectorAll(`#keyword-list-${boxNum} .keyword-checkbox`);
+                const someUnchecked = [...checkboxes].some(cb => !cb.checked);
                 
-                if (e.dataTransfer.files.length) {
-                    fileInput.files = e.dataTransfer.files;
-                    handleFileSelect({ target: fileInput });
-                }
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = someUnchecked;
+                });
+                
+                showNotification(someUnchecked ? 
+                    `All keywords in Box ${boxNum} selected` : 
+                    `Selection cleared in Box ${boxNum}`);
             });
-
-            // Functions
-            function handleFileSelect(event) {
-                const file = event.target.files[0];
-                if (!file) return;
-
-                if (!file.type.match('image.*')) {
-                    alert('দয়া করে একটি ইমেজ ফাইল নির্বাচন করুন');
-                    return;
-                }
-
-                currentImageName = file.name.split('.')[0];
-
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    previewImage.src = e.target.result;
-                    currentImage = e.target.result;
-                    updateImageInfo(file);
-                };
-                reader.readAsDataURL(file);
-            }
-
-            function updateCornerRadius() {
-                const radius = cornerRadius.value;
-                previewImage.style.borderRadius = `${radius}px`;
-                radiusValue.textContent = `${radius}px`;
-            }
-
-            function downloadImage() {
-                if (!currentImage) {
-                    alert('দয়া করে প্রথমে একটি ইমেজ আপলোড করুন');
-                    return;
-                }
-
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                const img = new Image();
-                
-                img.onload = function() {
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-                    
-                    // Clear canvas with transparent background
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    
-                    // Create rounded corners
-                    const radius = parseInt(cornerRadius.value);
-                    ctx.beginPath();
-                    ctx.moveTo(radius, 0);
-                    ctx.lineTo(img.width - radius, 0);
-                    ctx.quadraticCurveTo(img.width, 0, img.width, radius);
-                    ctx.lineTo(img.width, img.height - radius);
-                    ctx.quadraticCurveTo(img.width, img.height, img.width - radius, img.height);
-                    ctx.lineTo(radius, img.height);
-                    ctx.quadraticCurveTo(0, img.height, 0, img.height - radius);
-                    ctx.lineTo(0, radius);
-                    ctx.quadraticCurveTo(0, 0, radius, 0);
-                    ctx.closePath();
-                    ctx.clip();
-                    
-                    // Draw the image with transparent background
-                    ctx.drawImage(img, 0, 0);
-                    
-                    // Convert to PNG with transparent background
-                    const url = canvas.toDataURL('image/png');
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `${currentImageName}_rounded${cornerRadius.value > 0 ? `_${cornerRadius.value}px` : ''}.png`;
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                };
-                
-                img.src = currentImage;
-            }
-
-            function resetAll() {
-                previewImage.src = '';
-                currentImage = null;
-                cornerRadius.value = 0;
-                radiusValue.textContent = '0px';
-                previewImage.style.borderRadius = '0';
-                fileInput.value = '';
-                imageInfo.style.display = 'none';
-            }
-
-            function updateImageInfo(file) {
-                const img = new Image();
-                img.onload = function() {
-                    imageInfo.textContent = `${file.name} | ${img.width}×${img.height}px | ${formatFileSize(file.size)}`;
-                    imageInfo.style.display = 'block';
-                };
-                img.src = URL.createObjectURL(file);
-            }
-
-            function formatFileSize(bytes) {
-                if (bytes === 0) return '0 Bytes';
-                const k = 1024;
-                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-                const i = Math.floor(Math.log(bytes) / Math.log(k));
-                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-            }
-
-            function toggleTheme() {
-                const currentTheme = document.documentElement.getAttribute('data-theme');
-                if (currentTheme === 'dark') {
-                    document.documentElement.removeAttribute('data-theme');
-                    themeIcon.textContent = '🌙';
-                    themeText.textContent = 'ডার্ক মোড';
-                } else {
-                    document.documentElement.setAttribute('data-theme', 'dark');
-                    themeIcon.textContent = '☀️';
-                    themeText.textContent = 'লাইট মোড';
-                }
-            }
-
-            // Initialize
-            resetAll();
         });
+        
+        // Generate Keywords
+        function generateKeywords() {
+            const title = titleInput.value.trim();
+            const content = contentInput.value.trim();
+            
+            if (!title) {
+                showNotification('Please enter a title first', 'warning');
+                return;
+            }
+            
+            // Show loading state
+            loadingSection.style.display = 'block';
+            resultsSection.style.display = 'none';
+            titleDisplay.textContent = title;
+            
+            // Simulate processing (in real app, this would be API call)
+            setTimeout(() => {
+                const allKeywords = generateStockKeywords(title, content);
+                
+                // Split into two boxes of 500 keywords each
+                const box1Keywords = allKeywords.slice(0, 500);
+                const box2Keywords = allKeywords.slice(500, 1000);
+                
+                displayKeywords(box1Keywords, box2Keywords);
+                
+                loadingSection.style.display = 'none';
+                resultsSection.style.display = 'block';
+                keywordCount.textContent = allKeywords.length;
+                
+                showNotification(`Successfully generated ${allKeywords.length} keywords!`);
+            }, 1500);
+        }
+        
+        // Generate Adobe Stock Keywords
+        function generateStockKeywords(title, content) {
+            const baseKeywords = extractBaseKeywords(title);
+            const contentKeywords = content ? extractBaseKeywords(content) : [];
+            const allKeywords = [...new Set([...baseKeywords, ...contentKeywords])];
+            
+            // Generate keyword variations for stock photography
+            const variations = [];
+            
+            // 1. Basic keyword variations
+            allKeywords.forEach(keyword => {
+                variations.push(keyword);
+                variations.push(`${keyword} background`);
+                variations.push(`${keyword} texture`);
+                variations.push(`${keyword} pattern`);
+                variations.push(`${keyword} element`);
+                variations.push(`${keyword} design`);
+                variations.push(`${keyword} concept`);
+                variations.push(`${keyword} theme`);
+            });
+            
+            // 2. Style/type variations
+            const styles = [
+                'minimal', 'modern', 'vintage', 'retro', 'grunge', 
+                'abstract', 'realistic', 'flat', '3d', 'hand drawn',
+                'watercolor', 'illustration', 'photorealistic', 'geometric',
+                'line art', 'silhouette', 'outline', 'monochrome', 'duotone',
+                'pastel', 'neon', 'glow', 'transparent', 'white background',
+                'isolated', 'close up', 'macro', 'aerial', 'top view'
+            ];
+            
+            styles.forEach(style => {
+                baseKeywords.forEach(keyword => {
+                    variations.push(`${style} ${keyword}`);
+                    variations.push(`${keyword} in ${style} style`);
+                });
+            });
+            
+            // 3. Color variations
+            const colors = [
+                'red', 'blue', 'green', 'yellow', 'orange', 'purple', 'pink',
+                'black', 'white', 'gray', 'brown', 'gold', 'silver', 'multicolor'
+            ];
+            
+            colors.forEach(color => {
+                baseKeywords.forEach(keyword => {
+                    variations.push(`${color} ${keyword}`);
+                    variations.push(`${keyword} with ${color} accent`);
+                });
+            });
+            
+            // 4. Usage variations
+            const usages = [
+                'for website', 'for social media', 'for print', 'for packaging',
+                'for branding', 'for advertising', 'for marketing', 'for blog',
+                'for presentation', 'for book cover', 'for poster', 'for flyer',
+                'for brochure', 'for card', 'for invitation', 'for wallpaper',
+                'for app', 'for mobile', 'for desktop', 'for commercial use',
+                'for personal use', 'for editorial'
+            ];
+            
+            usages.forEach(usage => {
+                baseKeywords.forEach(keyword => {
+                    variations.push(`${keyword} ${usage}`);
+                });
+            });
+            
+            // 5. Seasonal/holiday variations
+            const seasons = [
+                'spring', 'summer', 'autumn', 'fall', 'winter',
+                'christmas', 'new year', 'valentine', 'easter', 'halloween',
+                'thanksgiving', 'back to school', 'summer sale', 'black friday',
+                'cyber monday', 'holiday', 'festive'
+            ];
+            
+            seasons.forEach(season => {
+                baseKeywords.forEach(keyword => {
+                    variations.push(`${season} ${keyword}`);
+                    variations.push(`${keyword} for ${season}`);
+                });
+            });
+            
+            // 6. Technical variations
+            const technicals = [
+                'high resolution', 'HD', '4k', '8k', 'vector', 'EPS', 'AI',
+                'PSD', 'PNG', 'JPG', 'TIFF', 'SVG', 'PDF', 'transparent background',
+                'no background', 'high quality', 'professional', 'studio shot',
+                'natural light', 'well lit', 'sharp focus', 'shallow depth of field'
+            ];
+            
+            technicals.forEach(tech => {
+                baseKeywords.forEach(keyword => {
+                    variations.push(`${keyword} ${tech}`);
+                });
+            });
+            
+            // 7. Popular search terms
+            const popularSearches = [
+                'free', 'premium', 'royalty free', 'copyright free',
+                'creative commons', 'trending', 'popular', 'best seller',
+                'most downloaded', 'editor choice', 'featured', 'new',
+                'latest', '2023', '2024', '2025'
+            ];
+            
+            popularSearches.forEach(term => {
+                baseKeywords.forEach(keyword => {
+                    variations.push(`${keyword} ${term}`);
+                });
+            });
+            
+            // 8. Combine multiple keywords
+            for (let i = 0; i < baseKeywords.length; i++) {
+                for (let j = i + 1; j < baseKeywords.length; j++) {
+                    variations.push(`${baseKeywords[i]} and ${baseKeywords[j]}`);
+                }
+            }
+            
+            // 9. Add content keywords if available
+            if (contentKeywords.length > 0) {
+                contentKeywords.forEach(keyword => {
+                    if (!baseKeywords.includes(keyword)) {
+                        variations.push(keyword);
+                    }
+                });
+                
+                // Combine content keywords with title keywords
+                baseKeywords.forEach(base => {
+                    contentKeywords.forEach(content => {
+                        variations.push(`${base} with ${content}`);
+                    });
+                });
+            }
+            
+            // Remove duplicates and ensure minimum 1000
+            let uniqueKeywords = [...new Set(variations)];
+            
+            // If we don't have enough, generate more combinations
+            if (uniqueKeywords.length < 1000) {
+                const additional = generateAdditionalKeywords(baseKeywords, 1000 - uniqueKeywords.length);
+                uniqueKeywords = [...uniqueKeywords, ...additional];
+            }
+            
+            // Trim to 1000 if we have more
+            return uniqueKeywords.slice(0, 1000);
+        }
+        
+        function extractBaseKeywords(text) {
+            const stopWords = new Set([
+                'a', 'an', 'the', 'and', 'or', 'but', 'of', 'to', 'in', 'on', 
+                'at', 'for', 'with', 'as', 'by', 'your', 'is', 'are', 'was', 'were'
+            ]);
+            
+            // Process text
+            const words = text.toLowerCase()
+                .replace(/[^\w\s]|_/g, '') // Remove punctuation
+                .split(/\s+/);
+            
+            // Get meaningful keywords
+            const keywords = [];
+            const seen = new Set();
+            
+            // Single words
+            words.forEach(word => {
+                if (!stopWords.has(word) && word.length > 2 && !seen.has(word)) {
+                    seen.add(word);
+                    keywords.push(word);
+                }
+            });
+            
+            // Two-word phrases
+            for (let i = 0; i < words.length - 1; i++) {
+                const phrase = `${words[i]} ${words[i+1]}`;
+                if (!stopWords.has(words[i]) && !stopWords.has(words[i+1]) && !seen.has(phrase)) {
+                    seen.add(phrase);
+                    keywords.push(phrase);
+                }
+            }
+            
+            return keywords;
+        }
+        
+        function generateAdditionalKeywords(baseKeywords, count) {
+            const modifiers = [
+                'art', 'creative', 'visual', 'graphic', 'digital', 
+                'printable', 'template', 'resource', 'asset', 'collection',
+                'set', 'pack', 'bundle', 'series', 'variation', 'alternative',
+                'option', 'version', 'type', 'kind', 'style', 'form',
+                'layout', 'composition', 'arrangement', 'display', 'presentation'
+            ];
+            
+            const additional = [];
+            
+            for (let i = 0; i < count; i++) {
+                const base = baseKeywords[i % baseKeywords.length];
+                const modifier = modifiers[Math.floor(Math.random() * modifiers.length)];
+                additional.push(`${base} ${modifier}`);
+            }
+            
+            return additional;
+        }
+        
+        // Display Keywords in two boxes
+        function displayKeywords(box1Keywords, box2Keywords) {
+            // Box 1
+            const box1List = document.getElementById('keyword-list-1');
+            box1List.innerHTML = '';
+            
+            box1Keywords.forEach((keyword, index) => {
+                const item = document.createElement('div');
+                item.className = 'keyword-item';
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.className = 'keyword-checkbox';
+                checkbox.id = `keyword-${index+1}`;
+                checkbox.dataset.keyword = keyword;
+                
+                const label = document.createElement('label');
+                label.htmlFor = `keyword-${index+1}`;
+                label.className = 'keyword-text';
+                label.textContent = keyword;
+                
+                item.appendChild(checkbox);
+                item.appendChild(label);
+                box1List.appendChild(item);
+            });
+            
+            // Box 2
+            const box2List = document.getElementById('keyword-list-2');
+            box2List.innerHTML = '';
+            
+            box2Keywords.forEach((keyword, index) => {
+                const item = document.createElement('div');
+                item.className = 'keyword-item';
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.className = 'keyword-checkbox';
+                checkbox.id = `keyword-${index+501}`;
+                checkbox.dataset.keyword = keyword;
+                
+                const label = document.createElement('label');
+                label.htmlFor = `keyword-${index+501}`;
+                label.className = 'keyword-text';
+                label.textContent = keyword;
+                
+                item.appendChild(checkbox);
+                item.appendChild(label);
+                box2List.appendChild(item);
+            });
+        }
+        
+        // Toggle select all keywords
+        function toggleSelectAll(select) {
+            const checkboxes = document.querySelectorAll('.keyword-checkbox');
+            
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = select;
+            });
+            
+            showNotification(select ? 'All keywords selected' : 'Selection cleared');
+        }
+        
+        // Copy selected keywords to clipboard
+        function copySelectedKeywords() {
+            const checkboxes = document.querySelectorAll('.keyword-checkbox:checked');
+            if (checkboxes.length === 0) {
+                showNotification('No keywords selected', 'warning');
+                return;
+            }
+            
+            const keywords = Array.from(checkboxes).map(cb => cb.dataset.keyword);
+            const keywordText = keywords.join(', ');
+            
+            // Create temporary textarea for copying
+            const textarea = document.createElement('textarea');
+            textarea.value = keywordText;
+            document.body.appendChild(textarea);
+            textarea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showNotification(`Copied ${keywords.length} keywords to clipboard!`);
+                } else {
+                    showNotification('Failed to copy keywords', 'error');
+                }
+            } catch (err) {
+                showNotification('Failed to copy keywords', 'error');
+                console.error('Failed to copy:', err);
+            }
+            
+            document.body.removeChild(textarea);
+        }
+        
+        // Show notification
+        function showNotification(message, type = 'success') {
+            copyMessage.textContent = message;
+            
+            // Set color based on type
+            if (type === 'warning') {
+                copyNotification.style.background = 'var(--warning)';
+            } else if (type === 'error') {
+                copyNotification.style.background = 'var(--danger)';
+            } else {
+                copyNotification.style.background = 'var(--success)';
+            }
+            
+            copyNotification.classList.add('show');
+            
+            setTimeout(() => {
+                copyNotification.classList.remove('show');
+            }, 3000);
+        }
     </script>
 </body>
 </html>
